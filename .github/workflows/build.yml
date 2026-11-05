@@ -1,0 +1,37 @@
+
+name: Compilar Sadako Forge 1.20.1
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar proyecto
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.8'
+
+      - name: Compilar Sadako
+        working-directory: Sadako_Forge_1.20.1_Source
+        run: gradle build --stacktrace
+
+      - name: Guardar JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sadako-Forge-1.20.1
+          path: Sadako_Forge_1.20.1_Source/build/libs/*.jar
+          if-no-files-found: error
